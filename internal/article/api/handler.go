@@ -18,8 +18,6 @@ func NewHandler(service *application.Service) *Handler {
 }
 
 func (h *Handler) List(c *gin.Context) {
-	a := [...]int{
-		3, 2, 5,
-	}
-	c.JSON(http.StatusOK, a)
+	articles, _ := h.service.GetArticles(c)
+	c.JSON(http.StatusOK, articles)
 }

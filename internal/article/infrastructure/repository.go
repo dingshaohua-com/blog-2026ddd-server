@@ -2,6 +2,7 @@ package articleinfra
 
 import (
 	"blog-2026ddd-server/internal/article/domain"
+	"blog-2026ddd-server/internal/article/dto"
 	"context"
 
 	"gorm.io/gorm"
@@ -11,41 +12,43 @@ type Repository struct {
 	db *gorm.DB
 }
 
-func (r *Repository) Update(ctx context.Context, article *domain.Article) error {
-	//TODO implement me
-	panic("implement me")
+func NewRepository(db *gorm.DB) *Repository {
+	return &Repository{
+		db: db,
+	}
 }
 
+func (r *Repository) Create(
+	ctx context.Context,
+	article *domain.Article,
+) error {
+	return r.db.
+		WithContext(ctx).
+		Create(article).
+		Error
+}
 func (r *Repository) Delete(ctx context.Context, id uint) error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (r *Repository) List(ctx context.Context) ([]*domain.Article, error) {
+func (r *Repository) Update(ctx context.Context, article *domain.Article) error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func NewRepository(db *gorm.DB) *Repository {
-
-	return &Repository{
-		db: db,
-	}
-
-}
-
-func (r *Repository) Create(
-
-	ctx context.Context,
-	article *domain.Article,
-
-) error {
-
-	return r.db.
+func (r *Repository) List(ctx context.Context) ([]*dto.ArticleListItem, error) {
+	var articles []*dto.ArticleListItem
+	//err := r.db.WithContext(ctx).Find(&articles).Error
+	err := r.db.
 		WithContext(ctx).
-		Create(article).
+		Table("article").
+		Scan(&articles).
 		Error
-
+	if err != nil {
+		return nil, err
+	}
+	return articles, nil
 }
 
 func (r *Repository) FindByID(

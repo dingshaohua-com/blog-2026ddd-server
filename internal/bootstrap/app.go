@@ -8,6 +8,8 @@ import (
 
 	"blog-2026ddd-server/internal/infrastructure"
 
+	"github.com/danielgtaylor/huma/v2"
+	"github.com/danielgtaylor/huma/v2/adapters/humagin"
 	"github.com/gin-gonic/gin"
 	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
@@ -39,13 +41,15 @@ func NewApp() *App {
 	}
 
 	router := gin.Default()
+	config := huma.DefaultConfig("My API", "1.0.0")
+	api := humagin.New(router, config)
 	_redis, _ := infrastructure.NewRedis(cfg.Redis)
 
 	// 初始化模块
 	articleRepo := articleInfra.NewRepository(db)
 	articleSvc := articleApp.NewService(articleRepo)
 	articleHandler := articleApi.NewHandler(articleSvc)
-	articleApi.RegisterRoutes(router, articleHandler)
+	articleApi.RegisterRoutes(router, articleHandler, api)
 
 	return &App{
 		Router:   router,

@@ -18,11 +18,12 @@ func NewService(repo domain.Repository) *Service {
 
 func (s *Service) GetArticles(
 	ctx context.Context,
-) (*domain.Article, error) {
-	var count int64
-	var results []dto.ArticleResponse
+) ([]*dto.ArticleListItem, error) {
+	//var count int64
+	//var results []dto.ArticleResponse
+	articles, err := s.repo.List(ctx)
 
-	s.repo.List()
+	return articles, err
 
 }
 
