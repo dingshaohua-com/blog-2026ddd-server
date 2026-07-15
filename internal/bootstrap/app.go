@@ -4,19 +4,19 @@ import (
 	articleApi "blog-2026ddd-server/internal/article/api"
 	articleApp "blog-2026ddd-server/internal/article/application"
 	articleInfra "blog-2026ddd-server/internal/article/infrastructure"
+	"log"
 	"net/http"
 
 	"blog-2026ddd-server/internal/infrastructure"
 
 	"github.com/danielgtaylor/huma/v2"
-	"github.com/danielgtaylor/huma/v2/adapters/humagin"
-	"github.com/gin-gonic/gin"
+	"github.com/danielgtaylor/huma/v2/adapters/humago"
 	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
 )
 
 type App struct {
-	Router   *gin.Engine
+	Router   *http.ServeMux
 	Config   *infrastructure.Config
 	Database *gorm.DB
 	Server   *http.Server
@@ -24,9 +24,22 @@ type App struct {
 }
 
 func (app *App) Run() {
-	err := app.Router.Run(":" + app.Config.HTTPPort)
+	addr := ":" + app.Config.HTTPPort
+	server := &http.Server{
+		Addr:    addr,
+		Handler: app.Router,
+	}
+	log.Printf(
+		"HTTP已服务启动: http://localhost%s",
+		addr,
+	)
+	log.Printf(
+		"OpenAPI文档: http://localhost%s/docs",
+		addr,
+	)
+	err := server.ListenAndServe()
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 }
 
@@ -40,16 +53,16 @@ func NewApp() *App {
 		panic(err)
 	}
 
-	router := gin.Default()
+	router := http.NewServeMux()
 	config := huma.DefaultConfig("My API", "1.0.0")
-	api := humagin.New(router, config)
+	api := humago.New(router, config)
 	_redis, _ := infrastructure.NewRedis(cfg.Redis)
 
 	// 初始化模块
 	articleRepo := articleInfra.NewRepository(db)
 	articleSvc := articleApp.NewService(articleRepo)
 	articleHandler := articleApi.NewHandler(articleSvc)
-	articleApi.RegisterRoutes(router, articleHandler, api)
+	articleApi.RegisterRoutes(articleHandler, api)
 
 	return &App{
 		Router:   router,

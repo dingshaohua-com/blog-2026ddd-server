@@ -19,12 +19,8 @@ func NewService(repo domain.Repository) *Service {
 func (s *Service) GetArticles(
 	ctx context.Context,
 ) ([]*dto.ArticleListItem, error) {
-	//var count int64
-	//var results []dto.ArticleResponse
 	articles, err := s.repo.List(ctx)
-
 	return articles, err
-
 }
 
 func (s *Service) GetArticle(
