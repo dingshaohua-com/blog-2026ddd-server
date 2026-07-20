@@ -3,6 +3,7 @@ package application
 import (
 	"blog-2026ddd-server/internal/article/domain"
 	"blog-2026ddd-server/internal/article/dto"
+	"blog-2026ddd-server/internal/shared/api"
 	"context"
 )
 
@@ -18,8 +19,9 @@ func NewService(repo domain.Repository) *Service {
 
 func (s *Service) GetArticles(
 	ctx context.Context,
-) ([]*dto.ArticleListItem, error) {
-	articles, err := s.repo.List(ctx)
+	param api.Page,
+) (api.PageResult[*dto.ArticleListItem], error) {
+	articles, err := s.repo.ListArticles(ctx, param)
 	return articles, err
 }
 
@@ -30,6 +32,6 @@ func (s *Service) GetArticle(
 
 ) (*domain.Article, error) {
 
-	return s.repo.FindByID(ctx, id)
+	return s.repo.GetArticleByID(ctx, id)
 
 }

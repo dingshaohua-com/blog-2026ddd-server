@@ -27,3 +27,15 @@ func NewPostgres(dsn string) (*gorm.DB, error) {
 	sqlDB.SetConnMaxLifetime(time.Hour)
 	return db, nil
 }
+
+// Pageable Paginate GORM 专属分页 Scope：接收任意有 Limit() 和 Offset() 方法的参数
+type Pageable interface {
+	Limit() int
+	Offset() int
+}
+
+func Paginate(p Pageable) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		return db.Offset(p.Offset()).Limit(p.Limit())
+	}
+}

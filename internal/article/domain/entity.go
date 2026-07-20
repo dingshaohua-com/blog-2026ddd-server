@@ -10,3 +10,9 @@ type Article struct {
 	CreateTime  time.Time `gorm:"column:create_time" json:"createTime"`
 	Content     string    `gorm:"column:content" json:"content"`
 }
+
+type ArticleType struct {
+	ID   uint   `gorm:"primaryKey" json:"id"`
+	Name string `gorm:"type:varchar(50);not null" json:"name"`
+	Slug string `gorm:"type:varchar(50);uniqueIndex;not null" json:"slug"`
+}
