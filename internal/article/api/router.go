@@ -4,7 +4,7 @@ import (
 	"github.com/danielgtaylor/huma/v2"
 )
 
-func RegisterRoutes(articleHandler *ArticleHandler, api huma.API) {
+func RegisterRoutes(articleHandler *ArticleHandler, articleTypeHandler *ArticleTypeHandler, api huma.API) {
 	//group := engine.Group("/article")
 	//huma.Get(api, "", h.List))
 	//group.GET("", h.List)
@@ -18,7 +18,7 @@ func RegisterRoutes(articleHandler *ArticleHandler, api huma.API) {
 
 	// 2. 文章分类（ArticleType / Category）相关的路由组
 	typeGroup := huma.NewGroup(api, "/article-types") // 或者 /categories
-	huma.Get(typeGroup, "", h.List)
+	huma.Get(typeGroup, "", articleTypeHandler.List)
 
 	//huma.Get(typeGroup, "", h.ListTypes)
 	//huma.Get(typeGroup, "/{id}", h.GetType)

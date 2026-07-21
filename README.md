@@ -41,3 +41,4 @@ internal/
 ├── shared/        # 跨模块共享代码
 ├── bootstrap/     # 程序初始化、依赖组装
 └── infrastructure/# 数据库连接、日志、配置
+

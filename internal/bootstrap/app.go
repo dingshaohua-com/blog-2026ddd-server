@@ -4,6 +4,7 @@ import (
 	articleApi "blog-2026ddd-server/internal/article/api"
 	articleApp "blog-2026ddd-server/internal/article/application"
 	articleInfra "blog-2026ddd-server/internal/article/infrastructure"
+	sharedApi "blog-2026ddd-server/internal/shared/api"
 	"log"
 	"net/http"
 
@@ -46,6 +47,7 @@ func (app *App) Run() {
 // NewApp 这里负责组装整个系统
 func NewApp() *App {
 	cfg := infrastructure.LoadConfig()
+	sharedApi.ConfigureHumaErrors()
 
 	db, err := infrastructure.NewPostgres(cfg.Database)
 
@@ -55,14 +57,18 @@ func NewApp() *App {
 
 	router := http.NewServeMux()
 	config := huma.DefaultConfig("My API", "1.0.0")
+	config.CreateHooks = nil
 	api := humago.New(router, config)
 	_redis, _ := infrastructure.NewRedis(cfg.Redis)
 
 	// 初始化模块
-	articleRepo := articleInfra.NewRepository(db)
-	articleSvc := articleApp.NewService(articleRepo)
-	articleHandler := articleApi.NewHandler(articleSvc)
-	articleApi.RegisterRoutes(articleHandler, api)
+	articleRepo := articleInfra.NewArticleRepository(db)
+	articleTypeRepo := articleInfra.NewArticleTypeRepository(db)
+	articleSvc := articleApp.NewArticleService(articleRepo, articleRepo)
+	articleTypeSvc := articleApp.NewArticleTypeService(articleTypeRepo)
+	articleHandler := articleApi.NewArticleHandler(articleSvc)
+	articleTypeHandler := articleApi.NewArticleTypeHandler(articleTypeSvc)
+	articleApi.RegisterRoutes(articleHandler, articleTypeHandler, api)
 
 	return &App{
 		Router:   router,

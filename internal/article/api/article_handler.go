@@ -1,18 +1,18 @@
 package api
 
 import (
+	"blog-2026ddd-server/internal/article/api/dto"
 	"blog-2026ddd-server/internal/article/application"
-	"blog-2026ddd-server/internal/article/dto"
 	"blog-2026ddd-server/internal/shared/api"
 	"context"
-	"fmt"
+	"log"
 )
 
 type ArticleHandler struct {
-	service *application.Service
+	service *application.ArticleService
 }
 
-func NewArticleHandler(service *application.Service) *ArticleHandler {
+func NewArticleHandler(service *application.ArticleService) *ArticleHandler {
 	return &ArticleHandler{
 		service: service,
 	}
@@ -22,12 +22,25 @@ type ListRequest struct {
 	api.Page
 }
 
-// func (h *Handler) List(ctx context.Context, req *ListRequest) (*api.BodyResponse[[]*dto.ArticleListItem], error) {
-func (h *ArticleHandler) List(ctx context.Context, req *ListRequest) (*api.BodyResponse[api.PageResult[*dto.ArticleListItem]], error) {
-	fmt.Print("req.param: ", req.Page)
-	articles, err := h.service.GetArticles(ctx, req.Page)
+func (h *ArticleHandler) List(ctx context.Context, req *ListRequest) (*api.PageBodyResponse[*dto.ArticleListItem], error) {
+	result, err := h.service.List(ctx, application.ListQuery{
+		Page: req.Page.Page, PageSize: req.Page.PageSize,
+	})
 	if err != nil {
-		return nil, err
+		log.Printf("list articles: %v", err)
+		return nil, api.InternalError("文章列表加载失败")
 	}
-	return api.NewBodyResponse(articles), nil
+
+	items := make([]*dto.ArticleListItem, 0, len(result.Items))
+	for _, article := range result.Items {
+		items = append(items, &dto.ArticleListItem{
+			ID:          article.ID,
+			Title:       article.Title,
+			Description: article.Description,
+			TypeID:      article.TypeID,
+			CreateTime:  article.CreateTime,
+		})
+	}
+	page := api.Page{Page: result.Page, PageSize: result.PageSize}
+	return api.NewSuccessResponse(api.NewPageResult(items, result.Total, &page)), nil
 }
