@@ -6,7 +6,7 @@ import (
 )
 
 type ListItem struct {
-	ID          int64
+	ID          int
 	Title       string
 	Description string
 	TypeID      string

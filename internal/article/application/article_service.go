@@ -34,6 +34,6 @@ func (s *ArticleService) List(
 	}, nil
 }
 
-func (s *ArticleService) GetByID(ctx context.Context, id uint) (*domain.Article, error) {
+func (s *ArticleService) GetByID(ctx context.Context, id int) (*domain.Article, error) {
 	return s.repo.GetByID(ctx, id)
 }
