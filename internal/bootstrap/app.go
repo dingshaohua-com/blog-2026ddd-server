@@ -1,9 +1,7 @@
 package bootstrap
 
 import (
-	articleApi "blog-2026ddd-server/internal/article/api"
-	articleApp "blog-2026ddd-server/internal/article/application"
-	articleInfra "blog-2026ddd-server/internal/article/infrastructure"
+	"blog-2026ddd-server/internal/modules/article"
 	sharedApi "blog-2026ddd-server/internal/shared/api"
 	"log"
 	"net/http"
@@ -62,13 +60,7 @@ func NewApp() *App {
 	_redis, _ := infrastructure.NewRedis(cfg.Redis)
 
 	// 初始化模块
-	articleRepo := articleInfra.NewArticleRepository(db)
-	articleTypeRepo := articleInfra.NewArticleTypeRepository(db)
-	articleSvc := articleApp.NewArticleService(articleRepo, articleRepo)
-	articleTypeSvc := articleApp.NewArticleTypeService(articleTypeRepo)
-	articleHandler := articleApi.NewArticleHandler(articleSvc)
-	articleTypeHandler := articleApi.NewArticleTypeHandler(articleTypeSvc)
-	articleApi.RegisterRoutes(articleHandler, articleTypeHandler, api)
+	article.RegisterModule(db, api)
 
 	return &App{
 		Router:   router,

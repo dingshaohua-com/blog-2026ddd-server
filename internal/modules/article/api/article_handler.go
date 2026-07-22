@@ -1,18 +1,18 @@
 package api
 
 import (
-	"blog-2026ddd-server/internal/article/api/dto"
-	"blog-2026ddd-server/internal/article/application"
+	"blog-2026ddd-server/internal/modules/article/api/dto"
+	application2 "blog-2026ddd-server/internal/modules/article/application"
 	"blog-2026ddd-server/internal/shared/api"
 	"context"
 	"log"
 )
 
 type ArticleHandler struct {
-	service *application.ArticleService
+	service *application2.ArticleService
 }
 
-func NewArticleHandler(service *application.ArticleService) *ArticleHandler {
+func NewArticleHandler(service *application2.ArticleService) *ArticleHandler {
 	return &ArticleHandler{
 		service: service,
 	}
@@ -23,7 +23,7 @@ type ListRequest struct {
 }
 
 func (h *ArticleHandler) List(ctx context.Context, req *ListRequest) (*api.PageBodyResponse[*dto.ArticleListItem], error) {
-	result, err := h.service.List(ctx, application.ListQuery{
+	result, err := h.service.List(ctx, application2.ListQuery{
 		Page: req.Page.Page, PageSize: req.Page.PageSize,
 	})
 	if err != nil {

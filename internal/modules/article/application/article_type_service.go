@@ -1,7 +1,7 @@
 package application
 
 import (
-	"blog-2026ddd-server/internal/article/domain"
+	"blog-2026ddd-server/internal/modules/article/domain"
 	"context"
 )
 

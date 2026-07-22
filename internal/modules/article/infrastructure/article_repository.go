@@ -1,8 +1,8 @@
 package articleinfra
 
 import (
-	"blog-2026ddd-server/internal/article/application"
-	"blog-2026ddd-server/internal/article/domain"
+	"blog-2026ddd-server/internal/modules/article/application"
+	domain2 "blog-2026ddd-server/internal/modules/article/domain"
 	"context"
 
 	"gorm.io/gorm"
@@ -31,7 +31,7 @@ func (r *ArticleRepository) List(ctx context.Context, query application.ListQuer
 	return articles, total, nil
 }
 
-func (r *ArticleRepository) GetByID(ctx context.Context, id int) (*domain.Article, error) {
+func (r *ArticleRepository) GetByID(ctx context.Context, id int) (*domain2.Article, error) {
 	var model articleModel
 	if err := r.db.WithContext(ctx).First(&model, id).Error; err != nil {
 		return nil, err
@@ -39,5 +39,5 @@ func (r *ArticleRepository) GetByID(ctx context.Context, id int) (*domain.Articl
 	return model.toDomain(), nil
 }
 
-var _ domain.ArticleRepository = (*ArticleRepository)(nil)
+var _ domain2.ArticleRepository = (*ArticleRepository)(nil)
 var _ application.ArticleQuery = (*ArticleRepository)(nil)

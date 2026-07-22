@@ -1,8 +1,8 @@
 package api
 
 import (
-	"blog-2026ddd-server/internal/article/api/dto"
-	"blog-2026ddd-server/internal/article/application"
+	"blog-2026ddd-server/internal/modules/article/api/dto"
+	"blog-2026ddd-server/internal/modules/article/application"
 	"blog-2026ddd-server/internal/shared/api"
 	"context"
 	"log"

@@ -1,7 +1,7 @@
 package articleinfra
 
 import (
-	"blog-2026ddd-server/internal/article/domain"
+	domain2 "blog-2026ddd-server/internal/modules/article/domain"
 	"time"
 )
 
@@ -16,8 +16,8 @@ type articleModel struct {
 
 func (articleModel) TableName() string { return "article" }
 
-func (m articleModel) toDomain() *domain.Article {
-	return &domain.Article{
+func (m articleModel) toDomain() *domain2.Article {
+	return &domain2.Article{
 		ID: m.ID, Title: m.Title, Description: m.Description,
 		TypeID: m.TypeID, CreateTime: m.CreateTime, Content: m.Content,
 	}
@@ -31,6 +31,6 @@ type articleTypeModel struct {
 
 func (articleTypeModel) TableName() string { return "article_type" }
 
-func (m articleTypeModel) toDomain() *domain.ArticleType {
-	return &domain.ArticleType{ID: m.ID, Name: m.Name, Slug: m.Slug}
+func (m articleTypeModel) toDomain() *domain2.ArticleType {
+	return &domain2.ArticleType{ID: m.ID, Name: m.Name, Slug: m.Slug}
 }
