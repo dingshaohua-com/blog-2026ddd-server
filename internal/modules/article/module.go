@@ -10,9 +10,10 @@ import (
 )
 
 func RegisterModule(db *gorm.DB, api huma.API) {
-	articleRepo := articleInfra.NewArticleRepository(db)
 	articleTypeRepo := articleInfra.NewArticleTypeRepository(db)
-	articleSvc := application.NewArticleService(articleRepo, articleRepo)
+	articleRepo := articleInfra.NewArticleRepository(db)
+	articleQuery := articleInfra.NewArticleQuery(db)
+	articleSvc := application.NewArticleService(articleRepo, articleQuery)
 	articleTypeSvc := application.NewArticleTypeService(articleTypeRepo)
 	articleHandler := articleApi.NewArticleHandler(articleSvc)
 	articleTypeHandler := articleApi.NewArticleTypeHandler(articleTypeSvc)

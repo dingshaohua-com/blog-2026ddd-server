@@ -15,17 +15,6 @@ func NewArticleTypeService(repo domain.ArticleTypeRepository) *ArticleTypeServic
 	}
 }
 
-func (s *ArticleTypeService) List(ctx context.Context) ([]*ArticleTypeListItem, error) {
-	articleTypes, err := s.repo.List(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	items := make([]*ArticleTypeListItem, 0, len(articleTypes))
-	for _, articleType := range articleTypes {
-		items = append(items, &ArticleTypeListItem{
-			ID: articleType.ID, Name: articleType.Name, Slug: articleType.Slug,
-		})
-	}
-	return items, nil
+func (s *ArticleTypeService) List(ctx context.Context) ([]*domain.ArticleType, error) {
+	return s.repo.List(ctx)
 }

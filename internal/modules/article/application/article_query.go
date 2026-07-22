@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-type ListItem struct {
+type ArticleListItem struct {
 	ID          int
 	Title       string
 	Description string
@@ -31,12 +31,12 @@ func (q ListQuery) Normalize() ListQuery {
 }
 
 type ListResult struct {
-	Items    []*ListItem
+	Items    []*ArticleListItem
 	Total    int64
 	Page     int
 	PageSize int
 }
 
 type ArticleQuery interface {
-	List(ctx context.Context, query ListQuery) ([]*ListItem, int64, error)
+	List(ctx context.Context, query ListQuery) ([]*ArticleListItem, int64, error)
 }

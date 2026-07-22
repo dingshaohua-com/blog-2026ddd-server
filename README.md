@@ -42,3 +42,4 @@ internal/
 ├── bootstrap/     # 程序初始化、依赖组装
 └── infrastructure/# 数据库连接、日志、配置
 
+[//]: # (https://blog.csdn.net/XingyeLuoyue/article/details/159254112)

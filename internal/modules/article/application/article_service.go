@@ -1,16 +1,16 @@
 package application
 
 import (
-	domain2 "blog-2026ddd-server/internal/modules/article/domain"
+	"blog-2026ddd-server/internal/modules/article/domain"
 	"context"
 )
 
 type ArticleService struct {
-	repo  domain2.ArticleRepository
+	repo  domain.ArticleRepository
 	query ArticleQuery
 }
 
-func NewArticleService(repo domain2.ArticleRepository, query ArticleQuery) *ArticleService {
+func NewArticleService(repo domain.ArticleRepository, query ArticleQuery) *ArticleService {
 	return &ArticleService{
 		repo:  repo,
 		query: query,
@@ -27,13 +27,13 @@ func (s *ArticleService) List(
 		return ListResult{}, err
 	}
 	if articles == nil {
-		articles = make([]*ListItem, 0)
+		articles = make([]*ArticleListItem, 0)
 	}
 	return ListResult{
 		Items: articles, Total: total, Page: query.Page, PageSize: query.PageSize,
 	}, nil
 }
 
-func (s *ArticleService) GetByID(ctx context.Context, id int) (*domain2.Article, error) {
+func (s *ArticleService) GetByID(ctx context.Context, id int) (*domain.Article, error) {
 	return s.repo.GetByID(ctx, id)
 }
