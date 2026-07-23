@@ -3,7 +3,7 @@ package domain
 import "time"
 
 type Post struct {
-	ID         int64
+	ID         int
 	Content    string
 	CreateTime time.Time
 }

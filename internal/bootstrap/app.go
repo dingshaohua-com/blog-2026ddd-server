@@ -2,6 +2,7 @@ package bootstrap
 
 import (
 	"blog-2026ddd-server/internal/modules/article"
+	"blog-2026ddd-server/internal/modules/post"
 	sharedApi "blog-2026ddd-server/internal/shared/api"
 	"log"
 	"net/http"
@@ -61,6 +62,7 @@ func NewApp() *App {
 
 	// 初始化模块
 	article.RegisterModule(db, api)
+	post.RegisterModule(db, api)
 
 	return &App{
 		Router:   router,
