@@ -38,7 +38,7 @@ func (h *ArticleHandler) List(ctx context.Context, req *ListRequest) (*api.PageB
 			Title:       article.Title,
 			Description: article.Description,
 			TypeID:      article.TypeID,
-			CreateTime:  article.CreateTime,
+			CreatedAt:   article.CreatedAt,
 		})
 	}
 	page := api.Page{Page: result.Page, PageSize: result.PageSize}

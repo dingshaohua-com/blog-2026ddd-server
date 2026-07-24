@@ -7,6 +7,6 @@ type Article struct {
 	Title       string
 	Description string
 	TypeID      string
-	CreateTime  time.Time
+	CreatedAt   time.Time
 	Content     string
 }

@@ -57,6 +57,8 @@ func NewApp() *App {
 	router := http.NewServeMux()
 	config := huma.DefaultConfig("My API", "1.0.0")
 	config.CreateHooks = nil
+	//config.DocsRenderer = huma.DocsRendererScalar
+	//config.DocsRenderer = huma.DocsRendererSwaggerUI
 	api := humago.New(router, config)
 	_redis, _ := infrastructure.NewRedis(cfg.Redis)
 

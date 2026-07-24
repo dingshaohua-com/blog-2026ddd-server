@@ -10,7 +10,7 @@ type articleModel struct {
 	Title       string    `gorm:"column:title"`
 	Description string    `gorm:"column:description"`
 	TypeID      string    `gorm:"column:type_id"`
-	CreateTime  time.Time `gorm:"column:create_time"`
+	CreatedAt   time.Time `gorm:"column:create_time"`
 	Content     string    `gorm:"column:content"`
 }
 
@@ -19,7 +19,7 @@ func (articleModel) TableName() string { return "article" }
 func (m articleModel) toDomain() *domain2.Article {
 	return &domain2.Article{
 		ID: m.ID, Title: m.Title, Description: m.Description,
-		TypeID: m.TypeID, CreateTime: m.CreateTime, Content: m.Content,
+		TypeID: m.TypeID, CreatedAt: m.CreatedAt, Content: m.Content,
 	}
 }
 

@@ -10,7 +10,7 @@ type ArticleListItem struct {
 	Title       string
 	Description string
 	TypeID      string
-	CreateTime  time.Time
+	CreatedAt   time.Time
 }
 
 type ListQuery struct {

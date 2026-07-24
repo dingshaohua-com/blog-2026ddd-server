@@ -7,20 +7,22 @@ import (
 
 // 1. 封装结构体
 type PostDTO struct {
-	ID         int       `json:"id"`
-	Content    string    `json:"content"`
-	CreateTime time.Time `json:"createTime"`
+	ID        int       `json:"id"`
+	Content   string    `json:"content"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }
 
 // 2. 封装单个对象的转换：PO -> DTO
-func toPostDTO(po *domain.Post) *PostDTO {
-	if po == nil {
+func ToPostDTO(post *domain.Post) *PostDTO {
+	if post == nil {
 		return nil
 	}
 	return &PostDTO{
-		ID:         po.ID,
-		Content:    po.Content,
-		CreateTime: po.CreateTime,
+		ID:        post.ID(),
+		Content:   post.Content(),
+		CreatedAt: post.CreatedAt(),
+		UpdatedAt: post.UpdatedAt(),
 	}
 }
 
@@ -28,7 +30,7 @@ func toPostDTO(po *domain.Post) *PostDTO {
 func ToPostDTOList(pos []*domain.Post) []*PostDTO {
 	list := make([]*PostDTO, 0, len(pos))
 	for _, po := range pos {
-		list = append(list, toPostDTO(po))
+		list = append(list, ToPostDTO(po))
 	}
 	return list
 }

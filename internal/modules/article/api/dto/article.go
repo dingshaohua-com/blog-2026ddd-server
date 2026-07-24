@@ -7,5 +7,5 @@ type ArticleListItem struct {
 	Title       string    `json:"title"`
 	Description string    `json:"description"`
 	TypeID      string    `json:"typeId"`
-	CreateTime  time.Time `json:"createTime"`
+	CreatedAt   time.Time `json:"createdAt"`
 }
