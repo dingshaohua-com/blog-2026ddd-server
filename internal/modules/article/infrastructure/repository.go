@@ -1,4 +1,4 @@
-package articleinfra
+package infrastructure
 
 import (
 	"blog-2026ddd-server/internal/modules/article/domain"
