@@ -5,18 +5,19 @@ import (
 	"time"
 )
 
-type articleModel struct {
+type ArticleModel struct {
 	ID          int       `gorm:"column:id;primaryKey"`
 	Title       string    `gorm:"column:title"`
 	Description string    `gorm:"column:description"`
-	TypeID      string    `gorm:"column:type_id"`
-	CreatedAt   time.Time `gorm:"column:create_time"`
+	TypeID      int       `gorm:"column:type_id"`
+	TypeName    string    `gorm:"column:type_name"` // 新增（连表查询用到）
+	CreatedAt   time.Time `gorm:"column:created_at"`
 	Content     string    `gorm:"column:content"`
 }
 
-func (articleModel) TableName() string { return "article" }
+func (ArticleModel) TableName() string { return "article" }
 
-func (m articleModel) toDomain() *domain.Article {
+func (m ArticleModel) toDomain() *domain.Article {
 	return &domain.Article{
 		ID: m.ID, Title: m.Title, Description: m.Description,
 		TypeID: m.TypeID, CreatedAt: m.CreatedAt, Content: m.Content,
@@ -24,7 +25,7 @@ func (m articleModel) toDomain() *domain.Article {
 }
 
 type articleTypeModel struct {
-	ID   uint   `gorm:"column:id;primaryKey"`
+	ID   int    `gorm:"column:id;primaryKey"`
 	Name string `gorm:"column:name;type:varchar(50);not null"`
 	Slug string `gorm:"column:slug;type:varchar(50);uniqueIndex;not null"`
 }

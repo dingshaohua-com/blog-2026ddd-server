@@ -10,7 +10,8 @@ type ArticleListItem struct {
 	ID          int
 	Title       string
 	Description string
-	TypeID      string
+	TypeID      int
+	TypeName    string
 	CreatedAt   time.Time
 }
 

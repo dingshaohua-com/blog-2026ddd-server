@@ -17,7 +17,7 @@ func NewArticleRepository(db *gorm.DB) *ArticleRepository {
 }
 
 func (r *ArticleRepository) GetByID(ctx context.Context, id int) (*domain.Article, error) {
-	var model articleModel
+	var model ArticleModel
 	if err := r.db.WithContext(ctx).First(&model, id).Error; err != nil {
 		return nil, err
 	}
