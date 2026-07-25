@@ -1,21 +1,24 @@
 package article
 
 import (
-	articleApi "blog-2026ddd-server/internal/modules/article/api"
+	"blog-2026ddd-server/internal/modules/article/api"
 	"blog-2026ddd-server/internal/modules/article/application"
-	articleInfra "blog-2026ddd-server/internal/modules/article/infrastructure"
 
 	"github.com/danielgtaylor/huma/v2"
 	"gorm.io/gorm"
 )
 
-func RegisterModule(db *gorm.DB, api huma.API) {
-	articleTypeRepo := articleInfra.NewArticleTypeRepository(db)
-	articleRepo := articleInfra.NewArticleRepository(db)
+func RegisterModule(db *gorm.DB, serverApi huma.API) {
+
+	articleRepo := infrastructure.NewArticleRepository(db)
+	articleTypeRepo := infrastructure.NewArticleTypeRepository(db)
+
 	articleQuery := articleInfra.NewArticleQuery(db)
 	articleSvc := application.NewArticleService(articleRepo, articleQuery)
 	articleTypeSvc := application.NewArticleTypeService(articleTypeRepo)
-	articleHandler := articleApi.NewArticleHandler(articleSvc)
-	articleTypeHandler := articleApi.NewArticleTypeHandler(articleTypeSvc)
-	articleApi.RegisterRoutes(articleHandler, articleTypeHandler, api)
+
+	articleHandler := api.NewArticleHandler(articleSvc)
+	articleTypeHandler := api.NewArticleTypeHandler(articleTypeSvc)
+
+	api.RegisterRoutes(articleHandler, articleTypeHandler, serverApi)
 }

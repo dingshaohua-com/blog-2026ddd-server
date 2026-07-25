@@ -7,6 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// ArticleQuery ---start---
 type ArticleQuery struct {
 	db *gorm.DB
 }

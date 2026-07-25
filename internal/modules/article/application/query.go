@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+// article_query.go---start---
 type ArticleListItem struct {
 	ID          int
 	Title       string

@@ -9,3 +9,9 @@ type ArticleListItem struct {
 	TypeID      string    `json:"typeId"`
 	CreatedAt   time.Time `json:"createdAt"`
 }
+
+type ArticleTypeListItem struct {
+	ID   uint   `json:"id"`
+	Name string `json:"name"`
+	Slug string `json:"slug"`
+}
