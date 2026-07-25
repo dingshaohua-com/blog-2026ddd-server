@@ -24,7 +24,6 @@ func (s *PostService) Create(
 	if err != nil {
 		return nil, err
 	}
-
 	return s.repo.Create(ctx, post)
 }
 
@@ -37,11 +36,9 @@ func (s *PostService) Update(
 	if err != nil {
 		return err
 	}
-
 	if err := post.ChangeContent(content); err != nil {
 		return err
 	}
-
 	return s.repo.Update(ctx, post)
 }
 
@@ -61,10 +58,5 @@ func (s *PostService) Delete(
 	ctx context.Context,
 	id int,
 ) error {
-	_, err := s.repo.FindByID(ctx, id)
-	if err != nil {
-		return err
-	}
-
 	return s.repo.Delete(ctx, id)
 }

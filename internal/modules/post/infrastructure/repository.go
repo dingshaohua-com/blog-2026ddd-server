@@ -12,6 +12,10 @@ type PostRepository struct {
 	db *gorm.DB
 }
 
+func NewPostRepository(db *gorm.DB) *PostRepository {
+	return &PostRepository{db: db}
+}
+
 func (r *PostRepository) Create(
 	ctx context.Context,
 	post *domain.Post,
@@ -20,11 +24,9 @@ func (r *PostRepository) Create(
 		Content:   post.Content(),
 		CreatedAt: post.CreatedAt(),
 	}
-
 	if err := r.db.WithContext(ctx).Create(&model).Error; err != nil {
 		return nil, err
 	}
-
 	return model.toDomain(), nil
 }
 func (r *PostRepository) Update(ctx context.Context, post *domain.Post) error {
@@ -33,14 +35,12 @@ func (r *PostRepository) Update(ctx context.Context, post *domain.Post) error {
 		Model(&PostModel{}).
 		Where("id = ?", post.ID()).
 		Update("content", post.Content())
-
 	if result.Error != nil {
 		return result.Error
 	}
 	if result.RowsAffected == 0 {
 		return domain.ErrPostNotFound
 	}
-
 	return nil
 }
 
@@ -48,19 +48,13 @@ func (r *PostRepository) Delete(ctx context.Context, id int) error {
 	result := r.db.
 		WithContext(ctx).
 		Delete(&PostModel{}, id)
-
 	if result.Error != nil {
 		return result.Error
 	}
 	if result.RowsAffected == 0 {
 		return domain.ErrPostNotFound
 	}
-
 	return nil
-}
-
-func NewPostRepository(db *gorm.DB) *PostRepository {
-	return &PostRepository{db: db}
 }
 
 func (r *PostRepository) List(ctx context.Context) ([]*domain.Post, error) {
@@ -81,7 +75,6 @@ func (r *PostRepository) FindByID(
 	id int,
 ) (*domain.Post, error) {
 	var model PostModel
-
 	err := r.db.
 		WithContext(ctx).
 		Where("id = ?", id).
@@ -91,10 +84,8 @@ func (r *PostRepository) FindByID(
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, domain.ErrPostNotFound
 	}
-
 	if err != nil {
 		return nil, err
 	}
-
 	return model.toDomain(), nil
 }

@@ -13,8 +13,7 @@ type CreatePostRequest struct {
 
 // UpdatePostRequest 对应 PUT /post/{id}。
 type UpdatePostRequest struct {
-	ID int `path:"id" minimum:"1" doc:"文章 ID"`
-
+	ID   int `path:"id" minimum:"1" doc:"文章 ID"`
 	Body struct {
 		Content string `json:"content" minLength:"1" maxLength:"100" doc:"文章内容"`
 	}

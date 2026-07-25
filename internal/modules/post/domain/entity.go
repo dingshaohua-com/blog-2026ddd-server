@@ -63,11 +63,9 @@ func NewPost(content string, now time.Time) (*Post, error) {
 	post := &Post{
 		createdAt: now,
 	}
-
 	if err := post.ChangeContent(content); err != nil {
 		return nil, err
 	}
-
 	return post, nil
 }
 
