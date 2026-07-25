@@ -12,19 +12,51 @@ type PostRepository struct {
 	db *gorm.DB
 }
 
-func (r *PostRepository) Create(ctx context.Context, post *domain.Post) (*domain.Post, error) {
-	//TODO implement me
-	panic("implement me")
-}
+func (r *PostRepository) Create(
+	ctx context.Context,
+	post *domain.Post,
+) (*domain.Post, error) {
+	model := PostModel{
+		Content:   post.Content(),
+		CreatedAt: post.CreatedAt(),
+	}
 
+	if err := r.db.WithContext(ctx).Create(&model).Error; err != nil {
+		return nil, err
+	}
+
+	return model.toDomain(), nil
+}
 func (r *PostRepository) Update(ctx context.Context, post *domain.Post) error {
-	//TODO implement me
-	panic("implement me")
+	result := r.db.
+		WithContext(ctx).
+		Model(&PostModel{}).
+		Where("id = ?", post.ID()).
+		Update("content", post.Content())
+
+	if result.Error != nil {
+		return result.Error
+	}
+	if result.RowsAffected == 0 {
+		return domain.ErrPostNotFound
+	}
+
+	return nil
 }
 
 func (r *PostRepository) Delete(ctx context.Context, id int) error {
-	//TODO implement me
-	panic("implement me")
+	result := r.db.
+		WithContext(ctx).
+		Delete(&PostModel{}, id)
+
+	if result.Error != nil {
+		return result.Error
+	}
+	if result.RowsAffected == 0 {
+		return domain.ErrPostNotFound
+	}
+
+	return nil
 }
 
 func NewPostRepository(db *gorm.DB) *PostRepository {

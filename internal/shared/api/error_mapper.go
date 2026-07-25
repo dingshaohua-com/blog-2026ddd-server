@@ -26,7 +26,7 @@ func MapError(
 	}
 
 	log.Printf("operation failed: %v", err)
-	return InternalError(internalMessage)
+	return InternalError(internalMessage + err.Error())
 }
 
 // handlePostError 将领域错误转换为 HTTP 错误。

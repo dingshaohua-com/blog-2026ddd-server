@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-// 1. 封装结构体
+// PostDTO 1. 封装结构体
 type PostDTO struct {
 	ID        int       `json:"id"`
 	Content   string    `json:"content"`
@@ -13,7 +13,7 @@ type PostDTO struct {
 	UpdatedAt time.Time `json:"updatedAt"`
 }
 
-// 2. 封装单个对象的转换：PO -> DTO
+// ToPostDTO 2. 封装单个对象的转换：PO -> DTO
 func ToPostDTO(post *domain.Post) *PostDTO {
 	if post == nil {
 		return nil
@@ -26,7 +26,7 @@ func ToPostDTO(post *domain.Post) *PostDTO {
 	}
 }
 
-// 3. 封装切片/列表的批量转换：[]PO -> []DTO
+// ToPostDTOList 3. 封装切片/列表的批量转换：[]PO -> []DTO
 func ToPostDTOList(pos []*domain.Post) []*PostDTO {
 	list := make([]*PostDTO, 0, len(pos))
 	for _, po := range pos {
