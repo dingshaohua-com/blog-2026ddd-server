@@ -11,4 +11,7 @@ func RegisterRoutes(handler *PostHandler, api huma.API) {
 	})
 	huma.Get(postGroup, "", handler.List)
 	huma.Get(postGroup, "/{id}", handler.Get)
+	huma.Post(postGroup, "", handler.Create)
+	huma.Put(postGroup, "/{id}", handler.Update)
+	huma.Delete(postGroup, "/{id}", handler.Delete)
 }
