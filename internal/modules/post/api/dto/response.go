@@ -20,7 +20,7 @@ func ToPostDTO(post *domain.Post) *PostDTO {
 	}
 	return &PostDTO{
 		ID:        post.ID(),
-		Content:   post.Content(),
+		Content:   post.Content().String(),
 		CreatedAt: post.CreatedAt(),
 		UpdatedAt: post.UpdatedAt(),
 	}

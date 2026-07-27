@@ -43,3 +43,55 @@ internal/
 └── infrastructure/# 数据库连接、日志、配置
 
 [//]: # (https://blog.csdn.net/XingyeLuoyue/article/details/159254112)
+
+
+对，基本正确。更严谨地标注如下：
+
+- 领域实体（Entity）✅  
+  `Post` 有 ID 和生命周期，是明确的实体；`Article` 也是实体雏形，但目前偏贫血。
+
+- 值对象（Value Object）❌  
+  暂时没有。`content` 目前仍是 `string`，以后可以抽象成 `PostContent`。
+
+- 聚合与聚合根（Aggregate / Aggregate Root）🟡  
+  `Post` 可以视为一个简单的单实体聚合根，但项目尚未显式体现包含多个实体、统一维护一致性的聚合结构。
+
+- 业务规则和不变量✅  
+  内容不能为空、不能超过 100 字是业务规则。如果它们要求任何合法 Post 始终满足，也是不变量。  
+  不过 `RestorePost` 目前绕过校验，所以该不变量尚未被完全保护。
+
+- 领域行为✅  
+  `Post.ChangeContent()` 是明确的领域行为。
+
+- 领域服务（Domain Service）❌  
+  目前没有跨多个领域对象、且不适合放进单个实体的领域逻辑。
+
+- 领域事件（Domain Event）❌  
+  暂时没有类似 `PostCreated`、`PostContentChanged` 的事件。
+
+- Repository 接口✅  
+  `PostRepository`、`ArticleRepository` 和 `ArticleTypeRepository` 都属于领域层声明的持久化抽象。
+
+- 工厂及重建方法✅  
+  `NewPost()` 是工厂方法，`RestorePost()` 是重建方法。虽然没有单独的 `PostFactory` 类型，但并不需要为了形式专门创建。
+
+- 领域错误或领域异常✅  
+  `ErrPostNotFound`、`ErrPostContentEmpty`、`ErrPostContentTooLong` 都属于领域错误。
+
+因此，最准确的项目现状是：
+
+```text
+✅ 领域实体
+❌ 值对象
+🟡 简单聚合根雏形
+✅ 业务规则
+🟡 不变量存在，但 RestorePost 尚未完全保护
+✅ 领域行为
+❌ 领域服务
+❌ 领域事件
+✅ Repository 接口
+✅ 工厂及重建方法
+✅ 领域错误
+```
+
+另外，DDD 不要求把所有元素都用一遍。当前 `Post` 业务简单，没有 Domain Service 或 Domain Event 很正常；只有出现实际业务需求时再引入。

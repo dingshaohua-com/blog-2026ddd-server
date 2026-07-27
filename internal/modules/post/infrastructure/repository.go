@@ -21,13 +21,13 @@ func (r *PostRepository) Create(
 	post *domain.Post,
 ) (*domain.Post, error) {
 	model := PostModel{
-		Content:   post.Content(),
+		Content:   post.Content().String(),
 		CreatedAt: post.CreatedAt(),
 	}
 	if err := r.db.WithContext(ctx).Create(&model).Error; err != nil {
 		return nil, err
 	}
-	return model.toDomain(), nil
+	return model.toDomain()
 }
 func (r *PostRepository) Update(ctx context.Context, post *domain.Post) error {
 	result := r.db.
@@ -64,9 +64,8 @@ func (r *PostRepository) List(ctx context.Context) ([]*domain.Post, error) {
 		return nil, err
 	}
 	// 2. 赋值转化,把数据库模型（PO）转换为业务模型（Domain）
-	posts := toDomainList(models)
 	// 3. 把转换好的 posts 返回给上层（Service / Biz 层）使用
-	return posts, nil
+	return toDomainList(models)
 
 }
 
@@ -87,5 +86,5 @@ func (r *PostRepository) FindByID(
 	if err != nil {
 		return nil, err
 	}
-	return model.toDomain(), nil
+	return model.toDomain()
 }

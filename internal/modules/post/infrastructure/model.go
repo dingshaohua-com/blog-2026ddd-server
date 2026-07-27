@@ -15,15 +15,23 @@ type PostModel struct {
 
 func (PostModel) TableName() string { return "post" }
 
-func (m PostModel) toDomain() *domain.Post {
-	return domain.RestorePost(m.ID, m.Content, m.CreatedAt, m.UpdatedAt)
+func (m PostModel) toDomain() (*domain.Post, error) {
+	content, err := domain.NewPostContent(m.Content)
+	if err != nil {
+		return nil, err
+	}
+	return domain.RestorePost(m.ID, content, m.CreatedAt, m.UpdatedAt), nil
 }
 
 // 封装在 PO 层（或专门的 convert 包里）
-func toDomainList(models []PostModel) []*domain.Post {
+func toDomainList(models []PostModel) ([]*domain.Post, error) {
 	res := make([]*domain.Post, 0, len(models))
 	for _, m := range models {
-		res = append(res, m.toDomain()) // 调用单个转换
+		post, err := m.toDomain()
+		if err != nil {
+			return nil, err
+		}
+		res = append(res, post) // 调用单个转换
 	}
-	return res
+	return res, nil
 }

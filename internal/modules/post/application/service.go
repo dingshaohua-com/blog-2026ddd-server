@@ -18,8 +18,12 @@ func NewPostService(repo domain.PostRepository) *PostService {
 
 func (s *PostService) Create(
 	ctx context.Context,
-	content string,
+	rawContent string,
 ) (*domain.Post, error) {
+	content, err := domain.NewPostContent(rawContent)
+	if err != nil {
+		return nil, err
+	}
 	post, err := domain.NewPost(content, time.Now())
 	if err != nil {
 		return nil, err
