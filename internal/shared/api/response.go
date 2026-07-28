@@ -26,3 +26,7 @@ func NewSuccessResponse[T any](data T) *BodyResponse[T] {
 		},
 	}
 }
+
+func NewEmptySuccessResponse() *BodyResponse[any] {
+	return NewSuccessResponse[any](nil)
+}

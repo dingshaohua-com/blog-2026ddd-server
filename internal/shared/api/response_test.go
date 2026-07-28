@@ -67,6 +67,13 @@ func TestNewCodeError(t *testing.T) {
 	}
 }
 
+func TestNewEmptySuccessResponse(t *testing.T) {
+	response := NewEmptySuccessResponse()
+	if response.Body.Code != CodeSuccess || response.Body.Msg != "success" || response.Body.Data != nil {
+		t.Fatalf("unexpected empty success response: %+v", response)
+	}
+}
+
 func TestInternalErrorMessage(t *testing.T) {
 	tests := []struct {
 		name     string

@@ -84,7 +84,7 @@ func (h *PostHandler) Update(ctx context.Context, req *dto.UpdatePostRequest) (*
 			errorMappings...,
 		)
 	}
-	return sharedApi.NewSuccessResponse[any](nil), nil
+	return sharedApi.NewEmptySuccessResponse(), nil
 }
 
 func (h *PostHandler) Delete(ctx context.Context, req *dto.DeletePostRequest) (*sharedApi.BodyResponse[any], error) {
@@ -97,5 +97,5 @@ func (h *PostHandler) Delete(ctx context.Context, req *dto.DeletePostRequest) (*
 		)
 	}
 
-	return sharedApi.NewSuccessResponse[any](nil), nil
+	return sharedApi.NewEmptySuccessResponse(), nil
 }
