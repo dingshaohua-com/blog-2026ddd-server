@@ -2,12 +2,8 @@ package domain
 
 import (
 	"errors"
-	"strings"
 	"time"
-	"unicode/utf8"
 )
-
-const MaxPostContentLength = 300
 
 // 领域错误
 var (
@@ -16,7 +12,7 @@ var (
 	ErrPostContentTooLong = errors.New("post 内容太长")
 )
 
-// 业务的对象/领域实体
+// Post 领域实体（也是业务的对象）
 type Post struct {
 	id        int
 	content   PostContent
@@ -37,26 +33,16 @@ func (p *Post) UpdatedAt() time.Time {
 	return p.updatedAt
 }
 
-// 值对象
-type PostContent struct {
-	value string
-}
-
-func NewPostContent(value string) (PostContent, error) {
-	value = strings.TrimSpace(value)
-	switch {
-	case value == "":
-		return PostContent{}, ErrPostContentEmpty
-	case utf8.RuneCountInString(value) > MaxPostContentLength:
-		return PostContent{}, ErrPostContentTooLong
+// NewPost 领域工厂方法
+func NewPost(content PostContent, now time.Time) (*Post, error) {
+	post := &Post{
+		createdAt: now,
+		content:   content,
 	}
-	return PostContent{value: value}, nil
-}
-func (c PostContent) String() string {
-	return c.value
+	return post, nil
 }
 
-// 领域行为：修改文章内容
+// ChangeContent 领域行为，用于修改文章内容
 func (p *Post) ChangeContent(content string) error {
 	postContent, err := NewPostContent(content)
 	if err != nil {
@@ -66,17 +52,7 @@ func (p *Post) ChangeContent(content string) error {
 	return nil
 }
 
-// 领域行为：创建领域对象的工厂方法，用于创建一篇新文章，（没错，领域实体的构造函数本身属于一个领域行为）
-func NewPost(content PostContent, now time.Time) (*Post, error) {
-	post := &Post{
-		createdAt: now,
-		content:   content,
-	}
-
-	return post, nil
-}
-
-// 业务的（领域）对象重建方法（不是业务行为）：用于 Infrastructure 从持久化数据恢复领域对象，为了让 Repository 在查询数据库后，能够构造私有字段的领域对象
+// RestorePost 业务的（领域）对象重建方法
 func RestorePost(
 	id int,
 	content PostContent,

@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-// PostModel 才是 PO，domain.Post 不是 PO。
+// PostModel 才是 PO，domain.Post 不是 PO，而是领域实体（Domain Entity）。
 type PostModel struct {
 	ID        int       `gorm:"column:id;primaryKey;autoIncrement"`
 	Content   string    `gorm:"column:content"`

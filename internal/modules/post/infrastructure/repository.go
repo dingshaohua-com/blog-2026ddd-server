@@ -29,12 +29,13 @@ func (r *PostRepository) Create(
 	}
 	return model.toDomain()
 }
+
 func (r *PostRepository) Update(ctx context.Context, post *domain.Post) error {
 	result := r.db.
 		WithContext(ctx).
 		Model(&PostModel{}).
 		Where("id = ?", post.ID()).
-		Update("content", post.Content())
+		Update("content", post.Content().String())
 	if result.Error != nil {
 		return result.Error
 	}
@@ -58,13 +59,10 @@ func (r *PostRepository) Delete(ctx context.Context, id int) error {
 }
 
 func (r *PostRepository) List(ctx context.Context) ([]*domain.Post, error) {
-	// 1. 数据库持久层（DAO / ORM 层）：查出来的是和数据库表字段一一对应的模型
 	var models []PostModel
 	if err := r.db.WithContext(ctx).Find(&models).Error; err != nil {
 		return nil, err
 	}
-	// 2. 赋值转化,把数据库模型（PO）转换为业务模型（Domain）
-	// 3. 把转换好的 posts 返回给上层（Service / Biz 层）使用
 	return toDomainList(models)
 
 }
