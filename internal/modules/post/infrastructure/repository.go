@@ -16,10 +16,7 @@ func NewPostRepository(db *gorm.DB) *PostRepository {
 	return &PostRepository{db: db}
 }
 
-func (r *PostRepository) Create(
-	ctx context.Context,
-	post *domain.Post,
-) (*domain.Post, error) {
+func (r *PostRepository) Create(ctx context.Context, post *domain.Post) (*domain.Post, error) {
 	model := PostModel{
 		Content:   post.Content().String(),
 		CreatedAt: post.CreatedAt(),
@@ -67,10 +64,7 @@ func (r *PostRepository) List(ctx context.Context) ([]*domain.Post, error) {
 
 }
 
-func (r *PostRepository) FindByID(
-	ctx context.Context,
-	id int,
-) (*domain.Post, error) {
+func (r *PostRepository) FindByID(ctx context.Context, id int) (*domain.Post, error) {
 	var model PostModel
 	err := r.db.
 		WithContext(ctx).

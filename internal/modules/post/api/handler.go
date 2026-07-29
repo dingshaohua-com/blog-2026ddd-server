@@ -96,6 +96,5 @@ func (h *PostHandler) Delete(ctx context.Context, req *dto.DeletePostRequest) (*
 			errorMappings...,
 		)
 	}
-
 	return sharedApi.NewEmptySuccessResponse(), nil
 }

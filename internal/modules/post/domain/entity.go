@@ -53,12 +53,7 @@ func (p *Post) ChangeContent(content string) error {
 }
 
 // RestorePost 业务的（领域）对象重建方法
-func RestorePost(
-	id int,
-	content PostContent,
-	createdAt time.Time,
-	updatedAt time.Time,
-) *Post {
+func RestorePost(id int, content PostContent, createdAt time.Time, updatedAt time.Time) *Post {
 	return &Post{
 		id:        id,
 		content:   content,
