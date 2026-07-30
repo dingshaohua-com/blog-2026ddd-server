@@ -12,8 +12,8 @@ type ErrorMapping struct {
 
 // MapError 领域错误 → HTTP 状态码
 func MapError(
-	err error,
 	internalMessage string,
+	err error,
 	mappings ...ErrorMapping,
 ) error {
 	for _, mapping := range mappings {

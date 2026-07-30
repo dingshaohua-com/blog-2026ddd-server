@@ -5,7 +5,6 @@ import (
 	"blog-2026ddd-server/internal/modules/article/application"
 	"blog-2026ddd-server/internal/shared/api"
 	"context"
-	"log"
 )
 
 // ArticleHandler ---start--
@@ -23,17 +22,16 @@ type ListRequest struct {
 	api.Page
 }
 
-func (h *ArticleHandler) List(ctx context.Context, req *ListRequest) (*api.PageBodyResponse[*dto.ArticleListItemDTO], error) {
+func (h *ArticleHandler) List(ctx context.Context, req *ListRequest) (*api.Body[api.PageResult[*dto.ArticleListItemDTO]], error) {
 	result, err := h.service.List(ctx, application.ListQuery{
 		Page: req.Page.Page, PageSize: req.Page.PageSize,
 	})
 	if err != nil {
-		log.Printf("list articles: %v", err)
-		return nil, api.InternalError("文章列表加载失败")
+		return nil, api.InternalError(err.Error())
 	}
 	items := dto.ToArticleDTOList(result.Items)
 	page := api.Page{Page: result.Page, PageSize: result.PageSize}
-	return api.NewSuccessResponse(api.NewPageResult(items, result.Total, &page)), nil
+	return api.NewBody(api.NewPageResult(items, result.Total, &page)), nil
 }
 
 // ArticleTypeHandler ---start---
@@ -47,10 +45,9 @@ func NewArticleTypeHandler(service *application.ArticleTypeService) *ArticleType
 	}
 }
 
-func (h *ArticleTypeHandler) List(ctx context.Context, _ *struct{}) (*api.BodyResponse[[]*dto.ArticleTypeListItemDTO], error) {
+func (h *ArticleTypeHandler) List(ctx context.Context, _ *struct{}) (*api.Body[[]*dto.ArticleTypeListItemDTO], error) {
 	articleTypes, err := h.service.List(ctx)
 	if err != nil {
-		log.Printf("list article types: %v", err)
 		return nil, api.InternalError(err.Error())
 	}
 	items := make([]*dto.ArticleTypeListItemDTO, 0, len(articleTypes))
@@ -59,5 +56,5 @@ func (h *ArticleTypeHandler) List(ctx context.Context, _ *struct{}) (*api.BodyRe
 			ID: articleType.ID, Name: articleType.Name, Slug: articleType.Slug,
 		})
 	}
-	return api.NewSuccessResponse(items), nil
+	return api.NewBody(items), nil
 }

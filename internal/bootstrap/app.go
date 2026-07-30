@@ -3,7 +3,6 @@ package bootstrap
 import (
 	"blog-2026ddd-server/internal/modules/article"
 	"blog-2026ddd-server/internal/modules/post"
-	sharedApi "blog-2026ddd-server/internal/shared/api"
 	"log"
 	"net/http"
 
@@ -46,7 +45,6 @@ func (app *App) Run() {
 // NewApp 这里负责组装整个系统
 func NewApp() *App {
 	cfg := infrastructure.LoadConfig()
-	sharedApi.ConfigureHumaErrors()
 
 	db, err := infrastructure.NewPostgres(cfg.Database)
 

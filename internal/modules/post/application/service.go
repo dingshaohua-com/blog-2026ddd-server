@@ -3,7 +3,6 @@ package application
 import (
 	"blog-2026ddd-server/internal/modules/post/domain"
 	"context"
-	"time"
 )
 
 type PostService struct {
@@ -16,26 +15,19 @@ func NewPostService(repo domain.PostRepository) *PostService {
 	}
 }
 
-func (s *PostService) Create(
-	ctx context.Context,
-	rawContent string,
-) (*domain.Post, error) {
+func (s *PostService) Create(ctx context.Context, rawContent string) (*domain.Post, error) {
 	content, err := domain.NewPostContent(rawContent)
 	if err != nil {
 		return nil, err
 	}
-	post, err := domain.NewPost(content, time.Now())
+	post, err := domain.NewPost(content)
 	if err != nil {
 		return nil, err
 	}
 	return s.repo.Create(ctx, post)
 }
 
-func (s *PostService) Update(
-	ctx context.Context,
-	id int,
-	content string,
-) error {
+func (s *PostService) Update(ctx context.Context, id int, content string) error {
 	post, err := s.repo.FindByID(ctx, id)
 	if err != nil {
 		return err
@@ -47,20 +39,13 @@ func (s *PostService) Update(
 }
 
 func (s *PostService) List(c context.Context) ([]*domain.Post, error) {
-	res, err := s.repo.List(c)
-	return res, err
+	return s.repo.List(c)
 }
 
-func (s *PostService) Get(
-	ctx context.Context,
-	id int,
-) (*domain.Post, error) {
+func (s *PostService) Get(ctx context.Context, id int) (*domain.Post, error) {
 	return s.repo.FindByID(ctx, id)
 }
 
-func (s *PostService) Delete(
-	ctx context.Context,
-	id int,
-) error {
+func (s *PostService) Delete(ctx context.Context, id int) error {
 	return s.repo.Delete(ctx, id)
 }

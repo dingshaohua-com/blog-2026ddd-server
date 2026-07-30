@@ -5,7 +5,6 @@ import (
 	"time"
 )
 
-// PostModel 才是 PO，domain.Post 不是 PO，而是领域实体（Domain Entity）。
 type PostModel struct {
 	ID        int       `gorm:"column:id;primaryKey;autoIncrement"`
 	Content   string    `gorm:"column:content"`
@@ -23,7 +22,6 @@ func (m PostModel) toDomain() (*domain.Post, error) {
 	return domain.RestorePost(m.ID, content, m.CreatedAt, m.UpdatedAt), nil
 }
 
-// 封装在 PO 层（或专门的 convert 包里）
 func toDomainList(models []PostModel) ([]*domain.Post, error) {
 	res := make([]*domain.Post, 0, len(models))
 	for _, m := range models {

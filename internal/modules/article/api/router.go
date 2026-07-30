@@ -5,14 +5,8 @@ import (
 )
 
 func RegisterRoutes(articleHandler *ArticleHandler, articleTypeHandler *ArticleTypeHandler, api huma.API) {
-	//group := engine.Group("/article")
-	//huma.Get(api, "", h.List))
-	//group.GET("", h.List)
-	//r.GET("/:id", h.Detail)
-	//r.POST("", h.Create)
-	//r.PUT("/:id", h.Update)
-	//r.DELETE("/:id", h.Delete)
 
+	// 1. 文章相关的路由组
 	articleGroup := huma.NewGroup(api, "/article")
 
 	articleGroup.UseSimpleModifier(func(op *huma.Operation) {
@@ -20,16 +14,10 @@ func RegisterRoutes(articleHandler *ArticleHandler, articleTypeHandler *ArticleT
 	})
 	huma.Get(articleGroup, "", articleHandler.List)
 
-	// 2. 文章分类（ArticleType / Category）相关的路由组
+	// 2. 文章分类 相关的路由组
 	articleTypeGroup := huma.NewGroup(api, "/article-types") // 或者 /categories
 	articleTypeGroup.UseSimpleModifier(func(op *huma.Operation) {
 		op.Tags = []string{"文章"}
 	})
 	huma.Get(articleTypeGroup, "", articleTypeHandler.List)
-
-	//huma.Get(typeGroup, "", h.ListTypes)
-	//huma.Get(typeGroup, "/{id}", h.GetType)
-	//huma.Post(typeGroup, "", h.CreateType)
-	//huma.Put(typeGroup, "/{id}", h.UpdateType)
-	//huma.Delete(typeGroup, "/{id}", h.DeleteType)
 }

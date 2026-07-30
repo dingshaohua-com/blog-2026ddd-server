@@ -34,10 +34,9 @@ func (p *Post) UpdatedAt() time.Time {
 }
 
 // NewPost 领域工厂方法
-func NewPost(content PostContent, now time.Time) (*Post, error) {
+func NewPost(content PostContent) (*Post, error) {
 	post := &Post{
-		createdAt: now,
-		content:   content,
+		content: content,
 	}
 	return post, nil
 }

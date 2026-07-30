@@ -1,32 +1,14 @@
 package api
 
-const (
-	CodeSuccess = 0
-	CodeFailure = -1
-)
-
-type Response[T any] struct {
-	Code int    `json:"code"`
-	Msg  string `json:"msg"`
-	Data T      `json:"data"`
+// Body 是不额外包装业务信封的 Huma 响应结构。
+type Body[T any] struct {
+	Body T
 }
 
-type BodyResponse[T any] struct {
-	Body Response[T]
+func NewBody[T any](data T) *Body[T] {
+	return &Body[T]{Body: data}
 }
 
-type PageBodyResponse[T any] = BodyResponse[PageResult[T]]
-
-func NewSuccessResponse[T any](data T) *BodyResponse[T] {
-	return &BodyResponse[T]{
-		Body: Response[T]{
-			Code: CodeSuccess,
-			Msg:  "success",
-			Data: data,
-		},
-	}
-}
-
-func NewEmptySuccessResponse() *BodyResponse[any] {
-	return NewSuccessResponse[any](nil)
+func NoContent() *struct{} {
+	return &struct{}{}
 }

@@ -11,22 +11,14 @@ import (
 )
 
 func TestUnifiedResponses(t *testing.T) {
-	originalNewError := huma.NewError
-	originalNewErrorWithContext := huma.NewErrorWithContext
-	t.Cleanup(func() {
-		huma.NewError = originalNewError
-		huma.NewErrorWithContext = originalNewErrorWithContext
-	})
-
-	ConfigureHumaErrors()
 	_, testAPI := humatest.New(t, huma.DefaultConfig("Test API", "1.0.0"))
 
 	type input struct {
 		Value int `query:"value" required:"true"`
 	}
 
-	huma.Get(testAPI, "/test", func(_ context.Context, in *input) (*BodyResponse[int], error) {
-		return NewSuccessResponse(in.Value), nil
+	huma.Get(testAPI, "/test", func(_ context.Context, in *input) (*Body[int], error) {
+		return NewBody(in.Value), nil
 	})
 
 	t.Run("success", func(t *testing.T) {
@@ -35,11 +27,11 @@ func TestUnifiedResponses(t *testing.T) {
 			t.Fatalf("expected status 200, got %d", response.Code)
 		}
 
-		var body Response[int]
+		var body int
 		if err := json.Unmarshal(response.Body.Bytes(), &body); err != nil {
 			t.Fatalf("decode response: %v", err)
 		}
-		if body.Code != CodeSuccess || body.Msg != "success" || body.Data != 42 {
+		if body != 42 {
 			t.Fatalf("unexpected success response: %+v", body)
 		}
 	})
@@ -50,27 +42,19 @@ func TestUnifiedResponses(t *testing.T) {
 			t.Fatalf("expected status 422, got %d", response.Code)
 		}
 
-		var body ErrorResponse
+		var body huma.ErrorModel
 		if err := json.Unmarshal(response.Body.Bytes(), &body); err != nil {
 			t.Fatalf("decode response: %v", err)
 		}
-		if body.Code != CodeFailure || body.Msg != "参数校验失败" || body.Data != nil {
+		if body.Status != http.StatusUnprocessableEntity || body.Detail == "" {
 			t.Fatalf("unexpected error response: %+v", body)
 		}
 	})
 }
 
-func TestNewCodeError(t *testing.T) {
-	err := NewCodeError(http.StatusNotFound, 10001, "文章不存在")
-	if err.GetStatus() != http.StatusNotFound || err.Code != 10001 || err.Msg != "文章不存在" || err.Data != nil {
-		t.Fatalf("unexpected code error: %+v", err)
-	}
-}
-
-func TestNewEmptySuccessResponse(t *testing.T) {
-	response := NewEmptySuccessResponse()
-	if response.Body.Code != CodeSuccess || response.Body.Msg != "success" || response.Body.Data != nil {
-		t.Fatalf("unexpected empty success response: %+v", response)
+func TestNoContent(t *testing.T) {
+	if response := NoContent(); response == nil {
+		t.Fatal("expected non-nil empty response")
 	}
 }
 
@@ -88,7 +72,7 @@ func TestInternalErrorMessage(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			err := InternalError(test.message...)
-			if err.GetStatus() != http.StatusInternalServerError || err.Code != CodeFailure || err.Msg != test.expected || err.Data != nil {
+			if err.GetStatus() != http.StatusInternalServerError || err.Error() != test.expected {
 				t.Fatalf("unexpected internal error: %+v", err)
 			}
 		})

@@ -61,7 +61,6 @@ func (r *PostRepository) List(ctx context.Context) ([]*domain.Post, error) {
 		return nil, err
 	}
 	return toDomainList(models)
-
 }
 
 func (r *PostRepository) FindByID(ctx context.Context, id int) (*domain.Post, error) {
