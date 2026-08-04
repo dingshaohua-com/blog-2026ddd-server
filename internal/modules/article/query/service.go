@@ -1,7 +1,6 @@
-package infrastructure
+package query
 
 import (
-	"blog-2026ddd-server/internal/modules/article/application"
 	"context"
 
 	"gorm.io/gorm"
@@ -31,8 +30,8 @@ func NewArticleQuery(db *gorm.DB) *ArticleQuery {
 //	return articles, total, nil
 //}
 
-func (r *ArticleQuery) List(ctx context.Context, query application.ListQuery) ([]*application.ArticleListItem, int64, error) {
-	var articles []*application.ArticleListItem
+func (r *ArticleQuery) ListDao(ctx context.Context, query ListQuery) ([]*ArticleListItem, int64, error) {
+	var articles []*ArticleListItem
 	var total int64
 
 	dbQuery := r.db.WithContext(ctx).Table("article")
@@ -54,4 +53,19 @@ func (r *ArticleQuery) List(ctx context.Context, query application.ListQuery) ([
 	return articles, total, nil
 }
 
-var _ application.ArticleQuery = (*ArticleQuery)(nil)
+func (s *ArticleQuery) List(
+	ctx context.Context,
+	query ListQuery,
+) (ListResult, error) {
+	query = query.Normalize()
+	articles, total, err := s.ListDao(ctx, query)
+	if err != nil {
+		return ListResult{}, err
+	}
+	if articles == nil {
+		articles = make([]*ArticleListItem, 0)
+	}
+	return ListResult{
+		Items: articles, Total: total, Page: query.Page, PageSize: query.PageSize,
+	}, nil
+}

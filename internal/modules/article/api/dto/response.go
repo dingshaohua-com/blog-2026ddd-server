@@ -1,7 +1,7 @@
 package dto
 
 import (
-	"blog-2026ddd-server/internal/modules/article/application"
+	"blog-2026ddd-server/internal/modules/article/query"
 	"time"
 )
 
@@ -21,7 +21,7 @@ type ArticleTypeListItemDTO struct {
 }
 
 // ToArticleDTO 2. 封装单个对象的转换：PO -> DTO
-func ToArticleDTO(article *application.ArticleListItem) *ArticleListItemDTO {
+func ToArticleDTO(article *query.ArticleListItem) *ArticleListItemDTO {
 	if article == nil {
 		return nil
 	}
@@ -36,7 +36,7 @@ func ToArticleDTO(article *application.ArticleListItem) *ArticleListItemDTO {
 }
 
 // ToArticleDTOList 3. 封装切片/列表的批量转换：[]PO -> []DTO
-func ToArticleDTOList(pos []*application.ArticleListItem) []*ArticleListItemDTO {
+func ToArticleDTOList(pos []*query.ArticleListItem) []*ArticleListItemDTO {
 	list := make([]*ArticleListItemDTO, 0, len(pos))
 	for _, po := range pos {
 		list = append(list, ToArticleDTO(po))

@@ -3,6 +3,7 @@ package api
 import (
 	"blog-2026ddd-server/internal/modules/article/api/dto"
 	"blog-2026ddd-server/internal/modules/article/application"
+	"blog-2026ddd-server/internal/modules/article/query"
 	"blog-2026ddd-server/internal/shared/api"
 	"context"
 )
@@ -10,11 +11,13 @@ import (
 // ArticleHandler ---start--
 type ArticleHandler struct {
 	service *application.ArticleService
+	query   *query.ArticleQuery
 }
 
-func NewArticleHandler(service *application.ArticleService) *ArticleHandler {
+func NewArticleHandler(service *application.ArticleService, query *query.ArticleQuery) *ArticleHandler {
 	return &ArticleHandler{
 		service: service,
+		query:   query,
 	}
 }
 
@@ -23,7 +26,7 @@ type ListRequest struct {
 }
 
 func (h *ArticleHandler) List(ctx context.Context, req *ListRequest) (*api.Body[api.PageResult[*dto.ArticleListItemDTO]], error) {
-	result, err := h.service.List(ctx, application.ListQuery{
+	result, err := h.query.List(ctx, query.ListQuery{
 		Page: req.Page.Page, PageSize: req.Page.PageSize,
 	})
 	if err != nil {

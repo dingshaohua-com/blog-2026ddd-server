@@ -1,11 +1,9 @@
-package application
+package query
 
 import (
-	"context"
 	"time"
 )
 
-// article_query.go---start---
 type ArticleListItem struct {
 	ID          int
 	Title       string
@@ -37,8 +35,4 @@ type ListResult struct {
 	Total    int64
 	Page     int
 	PageSize int
-}
-
-type ArticleQuery interface {
-	List(ctx context.Context, query ListQuery) ([]*ArticleListItem, int64, error)
 }
