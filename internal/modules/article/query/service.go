@@ -7,12 +7,12 @@ import (
 )
 
 // ArticleQuery ---start---
-type ArticleQuery struct {
+type ArticleService struct {
 	db *gorm.DB
 }
 
-func NewArticleQuery(db *gorm.DB) *ArticleQuery {
-	return &ArticleQuery{db: db}
+func NewArticleService(db *gorm.DB) *ArticleService {
+	return &ArticleService{db: db}
 }
 
 //func (r *ArticleQuery) List(ctx context.Context, query application.ListQuery) ([]*application.ArticleListItem, int64, error) {
@@ -30,7 +30,7 @@ func NewArticleQuery(db *gorm.DB) *ArticleQuery {
 //	return articles, total, nil
 //}
 
-func (r *ArticleQuery) ListDao(ctx context.Context, query ListQuery) ([]*ArticleListItem, int64, error) {
+func (r *ArticleService) ListDao(ctx context.Context, query ListQuery) ([]*ArticleListItem, int64, error) {
 	var articles []*ArticleListItem
 	var total int64
 
@@ -53,7 +53,7 @@ func (r *ArticleQuery) ListDao(ctx context.Context, query ListQuery) ([]*Article
 	return articles, total, nil
 }
 
-func (s *ArticleQuery) List(
+func (s *ArticleService) List(
 	ctx context.Context,
 	query ListQuery,
 ) (ListResult, error) {

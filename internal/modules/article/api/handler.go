@@ -10,14 +10,14 @@ import (
 
 // ArticleHandler ---start--
 type ArticleHandler struct {
-	service *application.ArticleService
-	query   *query.ArticleQuery
+	cmdSvc   *application.ArticleService
+	querySvc *query.ArticleService
 }
 
-func NewArticleHandler(service *application.ArticleService, query *query.ArticleQuery) *ArticleHandler {
+func NewArticleHandler(cmdSvc *application.ArticleService, querySvc *query.ArticleService) *ArticleHandler {
 	return &ArticleHandler{
-		service: service,
-		query:   query,
+		cmdSvc:   cmdSvc,
+		querySvc: querySvc,
 	}
 }
 
@@ -25,8 +25,8 @@ type ListRequest struct {
 	api.Page
 }
 
-func (h *ArticleHandler) List(ctx context.Context, req *ListRequest) (*api.Body[api.PageResult[*dto.ArticleListItemDTO]], error) {
-	result, err := h.query.List(ctx, query.ListQuery{
+func (h *ArticleHandler) List(ctx context.Context, req *ListRequest) (*api.Body[api.PageResult[dto.ArticleListItemDTO]], error) {
+	result, err := h.querySvc.List(ctx, query.ListQuery{
 		Page: req.Page.Page, PageSize: req.Page.PageSize,
 	})
 	if err != nil {
